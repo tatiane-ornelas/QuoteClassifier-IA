@@ -1,0 +1,5 @@
+gradio>=4.30.0
+pandas
+sentence-transformers
+langchain
+openai
