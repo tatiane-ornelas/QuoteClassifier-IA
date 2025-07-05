@@ -1,130 +1,146 @@
-# 🧠 QuoteClassifier-IA – Assistente Inteligente para Pesquisa Qualitativa
 
-Este projeto é um assistente inteligente que auxilia pesquisadores na **classificação automática de trechos de entrevistas (quotes)** em **constructos teóricos** previamente definidos. O sistema aplica **Inteligência Artificial Generativa** (como LLMs da OpenAI e embeddings semânticos) e foi desenvolvido com uma arquitetura modular baseada nos princípios **SOLID** e padrão **MVC**.
+# 📘 QuoteClassifier-IA – Assistente Inteligente para Pesquisa Qualitativa
+
+> Ferramenta baseada em IA para auxiliar pesquisadores na classificação de trechos de entrevistas qualitativas em constructos teóricos.
 
 ---
 
 ## 🎯 Objetivo
 
-Facilitar e acelerar a análise qualitativa de grandes volumes de dados textuais, fornecendo classificações automáticas justificadas com base em constructos fornecidos pelo usuário.
+Facilitar e acelerar a análise qualitativa de grandes volumes de dados textuais, fornecendo classificações automáticas **justificadas** com base em constructos definidos pelo usuário.
 
 ---
 
 ## 👥 Público-alvo
 
 Pesquisadores qualitativos nas áreas de:
+
 - Educação
 - Ciências Sociais
 - Psicologia
 - Engenharia de Software
-- Áreas que utilizam teorias estruturadas em constructos
+- Outras áreas com uso de teorias baseadas em constructos
 
 ---
 
-## 🧱 Estrutura do Projeto
+## 🧰 Requisitos do Sistema
+
+- Python 3.11+
+
+**Dependências principais:**
 
 ```
-QuoteClassifier-IA/
-├── app.py                         # Interface principal Gradio (executa o sistema)
-├── main_controller.py            # Controlador do fluxo entre as etapas
-├── assistente_classificador.py   # Chatbot com LLM para ajuda interativa
-├── requirements.txt              # Dependências do projeto
-├── .env.example                  # Exemplo de configuração da OpenAI API
-├── README.md                     # Este documento
-
-├── classifiers/                  # Módulos de classificação
-│   ├── base.py                   # Classe base para classificadores
-│   ├── embedding.py              # Classificador baseado em embeddings
-│   ├── llm.py                    # Classificador baseado em LLMs (GPT)
-│   ├── hybrid_classifier.py      # Classificador híbrido (LLM + Embeddings)
-│   ├── similarity_classifier.py  # Similaridade direta quote-constructo
-│   └── __init__.py
-
-├── core/                         # Núcleo de carregamento e orquestração
-│   ├── construct_loader.py       # Leitura dos constructos (manual ou planilha)
-│   ├── dataset_loader.py         # Leitura dos quotes
-│   ├── pipeline.py               # Encadeia o processo de classificação
-│   └── __init__.py
-
-├── data/
-│   ├── exemplo_constructos.xlsx  # Constructos de exemplo
-│   └── exemplo_quotes.xlsx       # Quotes de exemplo
-
-├── results/                      # Saída automática das classificações e avaliações
+gradio==5.35.0
+langchain_core==0.3.68
+langchain_openai==0.3.27
+llama_index==0.12.46
+matplotlib==3.10.3
+pandas==2.3.0
+pytest==8.3.4
+python-dotenv==1.1.1
+scikit_learn==1.7.0
+sentence_transformers==4.1.0
+views==0.3
 ```
 
 ---
 
 ## 🚀 Como Executar
 
-1. **Instale as dependências:**
+1. Instale as dependências:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-2. **Configure sua chave da OpenAI:**
+2. Configure sua chave da OpenAI:
 
-Crie um arquivo `.env` na raiz do projeto (ou copie `.env.example`):
+Crie um arquivo `.env` na raiz do projeto com o conteúdo:
 
-```env
+```
 OPENAI_API_KEY=sk-sua-chave-aqui
 ```
 
-3. **Execute a aplicação:**
+3. Execute o sistema:
+
 ```bash
 python app.py
 ```
 
-A interface será aberta automaticamente no navegador usando Gradio.
+A interface será aberta automaticamente no navegador via Gradio.
 
 ---
 
-## 🧪 Exemplo de uso
+## 🗂️ Estrutura do Projeto
 
-1. Defina o escopo da sua pesquisa
-2. Cadastre seus constructos e definições
-3. Carregue sua planilha de quotes
-4. Escolha o modelo de IA para classificação (LLM, embeddings ou híbrido)
-5. Execute a classificação
-6. Avalie os resultados com base na sua classificação manual
+```
+QuoteClassifier-IA/
+├── app.py
+├── main_controller.py
+├── assistente_classificador.py
+├── requirements.txt
+├── .env.example
+├── README.md / README.txt
+│
+├── classifiers/
+│   ├── base.py
+│   ├── embedding.py
+│   ├── llm.py
+│   ├── hybrid_classifier.py
+│   ├── similarity_classifier.py
+│
+├── core/
+│   ├── construct_loader.py
+│   ├── dataset_loader.py
+│   ├── pipeline.py
+│
+├── data/
+│   ├── exemplo_constructos.xlsx
+│   └── exemplo_quotes.xlsx
+│
+├── results/
+```
 
 ---
 
-## 🤖 Tecnologias Utilizadas
+## 🧪 Exemplo de Uso
 
-- **Python 3.11+**
-- **Gradio** – Interface gráfica para web
-- **LangChain** – Orquestração de LLMs
-- **LlamaIndex** – Indexação semântica
-- **OpenAI API** – Modelos GPT-3.5 e GPT-4
-- **SentenceTransformers** – Vetorização e similaridade
-- **Pandas** – Manipulação de dados
-- **dotenv** – Variáveis de ambiente
+1. Defina o escopo da pesquisa
+2. Cadastre os constructos e definições
+3. Faça upload da planilha com os quotes
+4. Escolha o modelo de IA (LLM, embeddings ou híbrido)
+5. Classifique os dados
+6. Avalie os resultados com base em classificações manuais
 
 ---
 
-## 🧠 Arquitetura e Padrões
+## ⚙️ Tecnologias Utilizadas
 
-- Arquitetura **modular** (MVC + SOLID)
-- Separação clara entre lógica, dados e interface
+- 🧠 LLMs (OpenAI GPT)
+- LangChain
+- LlamaIndex
+- SentenceTransformers
+- Gradio
+- Pandas
+- Python-dotenv
+
+---
+
+## 🧱 Arquitetura
+
+- Modular (padrão MVC + princípios SOLID)
 - Suporte a múltiplos classificadores
-- Chatbot integrado para suporte contextual
-
----
-
-## 📂 Resultados
-
-Todos os arquivos gerados (classificações automáticas, avaliações de acurácia, etc.) são salvos automaticamente na pasta `/results/`.
+- Assistente de ajuda baseado em IA (chatbot com LLM)
 
 ---
 
 ## 📄 Licença
 
-Este projeto é de uso acadêmico e livre para estudos. Para uso comercial, consulte o autor.
+Projeto acadêmico e livre para fins educacionais. Para uso comercial, contate a autora.
 
 ---
 
-## 👩‍💻 Autoria
+## ✍️ Autoria
 
-Desenvolvido por Tatiane Ornelas como projeto final do curso de Programação Aplicada à Pesquisa – PUC Minas.
-
+**Tatiane Ornelas**  
+Projeto Final do Curso de Programação Aplicada à Pesquisa – PUC Minas
