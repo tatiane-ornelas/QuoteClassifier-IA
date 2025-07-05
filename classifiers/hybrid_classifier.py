@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
-from langchain_core.prompts import ChatPromptTemplate, FewShotPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from .base import BaseQuoteClassifier
@@ -27,12 +27,11 @@ class HybridQuoteClassifier(BaseQuoteClassifier):
 
         self.embedder = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
-        # Prompt do exemplo
-        self.exemplo_prompt = ChatPromptTemplate.from_template(
-            'Quote: "{quote}" Constructo: {constructo} Justificativa: {justificativa}'
-        )
-
-        # Cadeia será definida em tempo de execução por quote (por causa dos top-N dinâmicos)
+        # Prompt do exemplo individual
+        self.exemplo_prompt = ChatPromptTemplate.from_messages([
+            ("human", 'Quote: "{quote}"'),
+            ("ai", "Constructo: {constructo}\nJustificativa: {justificativa}")
+        ])
 
     def classify(self, quotes):
         tempos = []
@@ -57,22 +56,21 @@ class HybridQuoteClassifier(BaseQuoteClassifier):
             top_n_constructos = sorted(similaridades.items(), key=lambda x: x[1], reverse=True)[:self.top_n]
             top_definicoes = "\n".join([f"{nome}: {self.constructos[nome]}" for nome, _ in top_n_constructos])
 
-            # Cria prompt few-shot dinâmico
-            prompt = FewShotPromptTemplate(
-                examples=self.exemplos,
+            # Cria prompt few-shot com estrutura de mensagens
+            few_shot_prompt = FewShotChatMessagePromptTemplate(
                 example_prompt=self.exemplo_prompt,
-                prefix=(
-                    "Com base no escopo: {escopo}\n"
-                    "E nas definições dos constructos mais similares:\n"
-                    "{top_definicoes}\n"
-                    "A seguir, veja exemplos de classificação:\n"
-                ),
-                suffix=(
-                    'Agora classifique o seguinte trecho:\n"{quote}"\n'
-                    "Retorne: Constructo: <nome> | Justificativa: <explicação>"
-                ),
-                input_variables=["quote", "escopo", "top_definicoes"]
+                examples=self.exemplos
             )
+
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", (
+                    "Você é um assistente treinado em análise qualitativa.\n"
+                    "Escopo: {escopo}\n"
+                    "Constructos mais similares:\n{top_definicoes}"
+                )),
+                few_shot_prompt,
+                ("human", 'Quote: "{quote}"\nClassifique o trecho com Constructo e Justificativa.')
+            ])
 
             chain = prompt | ChatOpenAI(model=self.modelo, temperature=0.4) | StrOutputParser()
 
